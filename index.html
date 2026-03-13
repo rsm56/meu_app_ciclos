@@ -3,155 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.A.I - Sistema de Análise de Inteligência</title>
+    <title>S.A.I - Inteligência & Histórico</title>
     <style>
-        :root { --primary: #00ff88; --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #58a6ff; }
+        :root { --primary: #00ff88; --bg: #0d1117; --card: #16213e; --text: #c9d1d9; --accent: #58a6ff; }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-        .header { text-align: center; padding: 15px; border-bottom: 2px solid var(--primary); margin-bottom: 15px; }
         .container { max-width: 800px; margin: auto; }
+        .header { text-align: center; padding: 10px; border-bottom: 2px solid var(--primary); margin-bottom: 15px; }
         
-        textarea { width: 100%; height: 80px; background: #010409; color: var(--primary); border: 1px solid #30363d; border-radius: 8px; padding: 10px; box-sizing: border-box; }
+        textarea { width: 100%; height: 70px; background: #010409; color: var(--primary); border: 1px solid #30363d; border-radius: 8px; padding: 10px; box-sizing: border-box; font-size: 16px; }
         
         .btn-group { display: flex; gap: 10px; margin: 10px 0; }
-        button { flex: 1; padding: 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; }
+        button { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; }
         .btn-save { background: var(--primary); color: #000; }
         .btn-clear { background: #ff4d4d; color: #fff; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-box { background: var(--card); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #30363d; }
-        .stat-box small { color: #8b949e; display: block; font-size: 0.7rem; }
-        .stat-box span { font-size: 1.1rem; font-weight: bold; color: var(--primary); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .stat-box { background: var(--card); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #30363d; }
+        .stat-box small { color: #8b949e; display: block; font-size: 0.6rem; text-transform: uppercase; }
+        .stat-box span { font-size: 1rem; font-weight: bold; color: var(--primary); }
 
-        .prediction-panel { background: var(--card); padding: 15px; border-radius: 12px; border: 2px solid var(--accent); }
-        .prediction-panel h2 { color: var(--accent); margin-top: 0; font-size: 1.2rem; text-align: center; }
+        .prediction-panel { background: rgba(22, 33, 62, 0.8); padding: 15px; border-radius: 12px; border: 2px solid var(--accent); margin-bottom: 20px; }
+        .prediction-panel h2 { color: var(--accent); margin-top: 0; font-size: 1.1rem; text-align: center; text-transform: uppercase; }
         
-        .bet-item { background: #0d1117; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--accent); }
-        .bet-label { font-size: 0.8rem; color: #58a6ff; font-weight: bold; text-transform: uppercase; }
-        .bet-value { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; display: block; margin-top: 5px; }
+        .bet-item { background: #0d1117; padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid var(--accent); }
+        .bet-label { font-size: 0.75rem; color: var(--accent); font-weight: bold; }
+        .bet-value { font-size: 1.1rem; font-weight: bold; display: block; margin-top: 3px; color: #fff; }
+
+        /* Estilo da Tabela de Histórico */
+        .history-section { background: var(--card); border-radius: 12px; padding: 10px; border: 1px solid #30363d; }
+        .history-section h3 { font-size: 1rem; margin-top: 0; color: #8b949e; text-align: center; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { border-bottom: 2px solid #30363d; padding: 8px; text-align: left; color: var(--primary); }
+        td { padding: 8px; border-bottom: 1px solid #30363d; }
+        .tag-grupo { background: #238636; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>S.A.I - ANÁLISE</h1>
-    <div id="dataDisplay" style="font-size: 0.9rem; color: var(--primary);"></div>
+    <h1 style="margin:0; font-size: 1.5rem;">S.A.I v2.1</h1>
+    <div id="dataDisplay" style="font-size: 0.8rem; color: var(--primary); margin-top: 5px;"></div>
 </div>
 
 <div class="container">
-    <textarea id="rawInput" placeholder="Cole os resultados aqui..."></textarea>
+    <textarea id="rawInput" placeholder="Cole resultados aqui (ex: 1234, 5678...)"></textarea>
     <div class="btn-group">
-        <button class="btn-save" onclick="salvar()">GRAVAR DADOS</button>
-        <button class="btn-clear" onclick="limpar()">LIMPAR</button>
-    </div>
-
-    <div class="stats-grid">
-        <div class="stat-box"><small>MILHARES</small><span id="mCount">0</span></div>
-        <div class="stat-box"><small>CENTENAS</small><span id="cCount">0</span></div>
-        <div class="stat-box"><small>GRUPOS</small><span id="gCount">0</span></div>
-        <div class="stat-box"><small>REGISTOS</small><span id="tCount">0</span></div>
-    </div>
-
-    <div class="prediction-panel">
-        <h2>🎯 SUGESTÕES DE HOJE</h2>
-        
-        <div class="bet-item">
-            <span class="bet-label">Próximos Grupos (Ciclo):</span>
-            <span class="bet-value" id="sugGrupos">---</span>
-        </div>
-
-        <div class="bet-item">
-            <span class="bet-label">Milhar e Centena Forte:</span>
-            <span class="bet-value" id="sugMilhar">---</span>
-        </div>
-
-        <div class="bet-item">
-            <span class="bet-label">Terno de Grupo:</span>
-            <span class="bet-value" id="sugTernoG">---</span>
-        </div>
-
-        <div class="bet-item">
-            <span class="bet-label">Terno de Dezena:</span>
-            <span class="bet-value" id="sugTernoD">---</span>
-        </div>
-    </div>
-</div>
-
-<script>
-    let db = JSON.parse(localStorage.getItem('banco_v2')) || [];
-
-    function atualizar() {
-        document.getElementById('dataDisplay').innerText = new Date().toLocaleString('pt-BR');
-        renderStats();
-        gerarSugestoes();
-    }
-
-    function salvar() {
-        const texto = document.getElementById('rawInput').value;
-        const numeros = texto.match(/\d+/g);
-        if (!numeros) return;
-
-        const dataAtual = new Date().toLocaleDateString('pt-BR');
-        
-        numeros.forEach(n => {
-            if (n.length >= 2) {
-                const dezena = n.slice(-2);
-                db.push({
-                    m: n.length >= 4 ? n.slice(-4) : null,
-                    c: n.length >= 3 ? n.slice(-3) : null,
-                    d: dezena,
-                    g: Math.ceil(parseInt(dezena == "00" ? 100 : dezena) / 4),
-                    data: dataAtual
-                });
-            }
-        });
-
-        localStorage.setItem('banco_v2', JSON.stringify(db));
-        document.getElementById('rawInput').value = "";
-        atualizar();
-    }
-
-    function renderStats() {
-        document.getElementById('mCount').innerText = db.filter(x => x.m).length;
-        document.getElementById('cCount').innerText = db.filter(x => x.c).length;
-        document.getElementById('gCount').innerText = [...new Set(db.map(x => x.g))].length;
-        document.getElementById('tCount').innerText = db.length;
-    }
-
-    function gerarSugestoes() {
-        if (db.length < 2) return;
-
-        // Lógica de Grupos Atrasados
-        let contagemG = {};
-        for(let i=1; i<=25; i++) contagemG[i] = 0;
-        db.forEach(item => contagemG[item.g]++);
-        let atrasados = Object.keys(contagemG).sort((a,b) => contagemG[a] - contagemG[b]);
-        
-        const g1 = atrasados[0], g2 = atrasados[1], g3 = atrasados[2], g4 = atrasados[3], g5 = atrasados[4];
-        
-        document.getElementById('sugGrupos').innerText = `${g1} - ${g2} - ${g3} - ${g4} - ${g5}`;
-        
-        // Sugestão Milhar e Centena (Baseado na última dezena do grupo mais atrasado)
-        document.getElementById('sugMilhar').innerText = `M: ${Math.floor(1000 + Math.random() * 9000)} | C: ${Math.floor(100 + Math.random() * 900)}`;
-
-        // Terno de Grupo (Top 3 atrasados)
-        document.getElementById('sugTernoG').innerText = `${g1}, ${g2}, ${g3}`;
-
-        // Terno de Dezena (Dezenas dos grupos atrasados)
-        const d1 = String(g1 * 4).padStart(2, '0');
-        const d2 = String(g2 * 4).padStart(2, '0');
-        const d3 = String(g3 * 4).padStart(2, '0');
-        document.getElementById('sugTernoD').innerText = `${d1} - ${d2} - ${d3}`;
-    }
-
-    function limpar() {
-        if(confirm("Apagar histórico permanente?")) {
-            db = [];
-            localStorage.removeItem('banco_v2');
-            atualizar();
-        }
-    }
-
-    atualizar();
-</script>
-</body>
-</html>
+        <button class="
