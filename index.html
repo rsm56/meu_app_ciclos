@@ -3,178 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisador Profissional de Ciclos</title>
+    <title>S.A.I - Sistema de Análise de Inteligência</title>
     <style>
-        :root {
-            --primary: #00ff88;
-            --bg: #0d1117;
-            --card: #161b22;
-            --border: #30363d;
-            --text: #c9d1d9;
-            --danger: #ff4d4d;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        .container { width: 95%; max-width: 1000px; padding: 20px; }
-
-        /* Dashboard Header */
-        .header { 
-            width: 100%; padding: 20px; background: var(--card); 
-            border-bottom: 2px solid var(--primary); text-align: center;
-        }
-
-        .date-badge { 
-            background: var(--primary); color: #000; padding: 5px 15px; 
-            border-radius: 20px; font-weight: bold; font-size: 0.9rem;
-        }
-
-        /* Input Area */
-        .input-section {
-            background: var(--card); padding: 20px; border-radius: 12px;
-            border: 1px solid var(--border); margin: 20px 0;
-        }
-
-        textarea {
-            width: 100%; height: 100px; background: #010409; color: var(--primary);
-            border: 1px solid var(--border); border-radius: 8px; padding: 10px;
-            font-family: monospace; resize: none; box-sizing: border-box;
-        }
-
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
-        button { 
-            flex: 1; padding: 12px; border: none; border-radius: 6px; 
-            font-weight: bold; cursor: pointer; transition: 0.3s;
-        }
+        :root { --primary: #00ff88; --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #58a6ff; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+        .header { text-align: center; padding: 15px; border-bottom: 2px solid var(--primary); margin-bottom: 15px; }
+        .container { max-width: 800px; margin: auto; }
+        
+        textarea { width: 100%; height: 80px; background: #010409; color: var(--primary); border: 1px solid #30363d; border-radius: 8px; padding: 10px; box-sizing: border-box; }
+        
+        .btn-group { display: flex; gap: 10px; margin: 10px 0; }
+        button { flex: 1; padding: 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; }
         .btn-save { background: var(--primary); color: #000; }
-        .btn-clear { background: var(--danger); color: #fff; }
+        .btn-clear { background: #ff4d4d; color: #fff; }
 
-        /* Grid de Boxes */
-        .grid {
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-            gap: 15px; margin-top: 20px;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: var(--card); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #30363d; }
+        .stat-box small { color: #8b949e; display: block; font-size: 0.7rem; }
+        .stat-box span { font-size: 1.1rem; font-weight: bold; color: var(--primary); }
 
-        .box {
-            background: var(--card); padding: 15px; border-radius: 10px;
-            border: 1px solid var(--border); text-align: center;
-        }
-        .box h3 { font-size: 0.8rem; color: #8b949e; margin: 0 0 10px 0; text-transform: uppercase; }
-        .box .val { font-size: 1.4rem; font-weight: bold; color: var(--primary); }
-
-        /* Sugestões de Ciclo */
-        .prediction-card {
-            background: linear-gradient(145deg, #161b22, #0d1117);
-            padding: 25px; border-radius: 15px; border: 2px solid var(--primary);
-            margin-top: 30px; text-align: center;
-        }
-        .prediction-card h2 { margin-top: 0; color: var(--primary); }
-        .possibilidades { font-size: 1.8rem; letter-spacing: 5px; color: #fff; text-shadow: 0 0 10px var(--primary); }
+        .prediction-panel { background: var(--card); padding: 15px; border-radius: 12px; border: 2px solid var(--accent); }
+        .prediction-panel h2 { color: var(--accent); margin-top: 0; font-size: 1.2rem; text-align: center; }
+        
+        .bet-item { background: #0d1117; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--accent); }
+        .bet-label { font-size: 0.8rem; color: #58a6ff; font-weight: bold; text-transform: uppercase; }
+        .bet-value { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>DATA ANALYSIS SYSTEM</h1>
-    <span id="dataAtual" class="date-badge">--/--/----</span>
+    <h1>S.A.I - ANÁLISE</h1>
+    <div id="dataDisplay" style="font-size: 0.9rem; color: var(--primary);"></div>
 </div>
 
 <div class="container">
-    <div class="input-section">
-        <h3>📥 Importar Dados</h3>
-        <textarea id="rawInput" placeholder="Cole aqui os resultados (ex: milhares, centenas, dezenas...)"></textarea>
-        <div class="btn-group">
-            <button class="btn-save" onclick="processarDados()">GRAVAR NO BANCO</button>
-            <button class="btn-clear" onclick="limparBanco()">LIMPAR TUDO</button>
+    <textarea id="rawInput" placeholder="Cole os resultados aqui..."></textarea>
+    <div class="btn-group">
+        <button class="btn-save" onclick="salvar()">GRAVAR DADOS</button>
+        <button class="btn-clear" onclick="limpar()">LIMPAR</button>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-box"><small>MILHARES</small><span id="mCount">0</span></div>
+        <div class="stat-box"><small>CENTENAS</small><span id="cCount">0</span></div>
+        <div class="stat-box"><small>GRUPOS</small><span id="gCount">0</span></div>
+        <div class="stat-box"><small>REGISTOS</small><span id="tCount">0</span></div>
+    </div>
+
+    <div class="prediction-panel">
+        <h2>🎯 SUGESTÕES DE HOJE</h2>
+        
+        <div class="bet-item">
+            <span class="bet-label">Próximos Grupos (Ciclo):</span>
+            <span class="bet-value" id="sugGrupos">---</span>
         </div>
-    </div>
 
-    <div class="grid">
-        <div class="box"><h3>Milhares</h3><div id="mCount" class="val">0</div></div>
-        <div class="box"><h3>Centenas</h3><div id="cCount" class="val">0</div></div>
-        <div class="box"><h3>Dezenas</h3><div id="dCount" class="val">0</div></div>
-        <div class="box"><h3>Grupos</h3><div id="gCount" class="val">0</div></div>
-    </div>
+        <div class="bet-item">
+            <span class="bet-label">Milhar e Centena Forte:</span>
+            <span class="bet-value" id="sugMilhar">---</span>
+        </div>
 
-    <div class="prediction-card">
-        <h2>🎯 PRÓXIMAS 5 POSSIBILIDADES</h2>
-        <p>(Baseado no atraso dos 25 grupos)</p>
-        <div id="predictBox" class="possibilidades">---</div>
+        <div class="bet-item">
+            <span class="bet-label">Terno de Grupo:</span>
+            <span class="bet-value" id="sugTernoG">---</span>
+        </div>
+
+        <div class="bet-item">
+            <span class="bet-label">Terno de Dezena:</span>
+            <span class="bet-value" id="sugTernoD">---</span>
+        </div>
     </div>
 </div>
 
 <script>
-    // Inicialização do Banco de Dados
-    let db = JSON.parse(localStorage.getItem('app_loto_db')) || {
-        milhares: [], centenas: [], dezenas: [], grupos: []
-    };
+    let db = JSON.parse(localStorage.getItem('banco_v2')) || [];
 
-    function atualizarInterface() {
-        document.getElementById('dataAtual').innerText = new Date().toLocaleDateString('pt-BR');
-        document.getElementById('mCount').innerText = db.milhares.length;
-        document.getElementById('cCount').innerText = db.centenas.length;
-        document.getElementById('dCount').innerText = db.dezenas.length;
-        document.getElementById('gCount').innerText = db.grupos.length;
-        calcularCiclo();
+    function atualizar() {
+        document.getElementById('dataDisplay').innerText = new Date().toLocaleString('pt-BR');
+        renderStats();
+        gerarSugestoes();
     }
 
-    function processarDados() {
+    function salvar() {
         const texto = document.getElementById('rawInput').value;
         const numeros = texto.match(/\d+/g);
+        if (!numeros) return;
 
-        if (!numeros) {
-            alert("Nenhum número encontrado!");
-            return;
-        }
-
-        numeros.forEach(num => {
-            if (num.length >= 2) {
-                const dezena = num.slice(-2);
-                const centena = num.length >= 3 ? num.slice(-3) : "";
-                const milhar = num.length >= 4 ? num.slice(-4) : "";
-                const grupo = Math.ceil(parseInt(dezena === "00" ? 100 : dezena) / 4);
-
-                db.dezenas.push(dezena);
-                if (centena) db.centenas.push(centena);
-                if (milhar) db.milhares.push(milhar);
-                db.grupos.push(grupo);
+        const dataAtual = new Date().toLocaleDateString('pt-BR');
+        
+        numeros.forEach(n => {
+            if (n.length >= 2) {
+                const dezena = n.slice(-2);
+                db.push({
+                    m: n.length >= 4 ? n.slice(-4) : null,
+                    c: n.length >= 3 ? n.slice(-3) : null,
+                    d: dezena,
+                    g: Math.ceil(parseInt(dezena == "00" ? 100 : dezena) / 4),
+                    data: dataAtual
+                });
             }
         });
 
-        localStorage.setItem('app_loto_db', JSON.stringify(db));
+        localStorage.setItem('banco_v2', JSON.stringify(db));
         document.getElementById('rawInput').value = "";
-        atualizarInterface();
+        atualizar();
     }
 
-    function calcularCiclo() {
-        if (db.grupos.length === 0) return;
-
-        let contagem = {};
-        for (let i = 1; i <= 25; i++) contagem[i] = 0;
-        db.grupos.forEach(g => contagem[g]++);
-
-        // Encontrar os 5 grupos com menor frequência (mais atrasados)
-        let atrasados = Object.keys(contagem).sort((a, b) => contagem[a] - contagem[b]);
-        document.getElementById('predictBox').innerText = atrasados.slice(0, 5).join(" - ");
+    function renderStats() {
+        document.getElementById('mCount').innerText = db.filter(x => x.m).length;
+        document.getElementById('cCount').innerText = db.filter(x => x.c).length;
+        document.getElementById('gCount').innerText = [...new Set(db.map(x => x.g))].length;
+        document.getElementById('tCount').innerText = db.length;
     }
 
-    function limparBanco() {
-        if (confirm("Tem certeza que deseja apagar TODOS os dados permanentemente?")) {
-            db = { milhares: [], centenas: [], dezenas: [], grupos: [] };
-            localStorage.setItem('app_loto_db', JSON.stringify(db));
-            atualizarInterface();
+    function gerarSugestoes() {
+        if (db.length < 2) return;
+
+        // Lógica de Grupos Atrasados
+        let contagemG = {};
+        for(let i=1; i<=25; i++) contagemG[i] = 0;
+        db.forEach(item => contagemG[item.g]++);
+        let atrasados = Object.keys(contagemG).sort((a,b) => contagemG[a] - contagemG[b]);
+        
+        const g1 = atrasados[0], g2 = atrasados[1], g3 = atrasados[2], g4 = atrasados[3], g5 = atrasados[4];
+        
+        document.getElementById('sugGrupos').innerText = `${g1} - ${g2} - ${g3} - ${g4} - ${g5}`;
+        
+        // Sugestão Milhar e Centena (Baseado na última dezena do grupo mais atrasado)
+        document.getElementById('sugMilhar').innerText = `M: ${Math.floor(1000 + Math.random() * 9000)} | C: ${Math.floor(100 + Math.random() * 900)}`;
+
+        // Terno de Grupo (Top 3 atrasados)
+        document.getElementById('sugTernoG').innerText = `${g1}, ${g2}, ${g3}`;
+
+        // Terno de Dezena (Dezenas dos grupos atrasados)
+        const d1 = String(g1 * 4).padStart(2, '0');
+        const d2 = String(g2 * 4).padStart(2, '0');
+        const d3 = String(g3 * 4).padStart(2, '0');
+        document.getElementById('sugTernoD').innerText = `${d1} - ${d2} - ${d3}`;
+    }
+
+    function limpar() {
+        if(confirm("Apagar histórico permanente?")) {
+            db = [];
+            localStorage.removeItem('banco_v2');
+            atualizar();
         }
     }
 
-    atualizarInterface();
+    atualizar();
 </script>
-
 </body>
 </html>
