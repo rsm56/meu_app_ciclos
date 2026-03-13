@@ -3,49 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.A.I - Inteligência & Histórico</title>
+    <title>S.A.I - Dashboard Profissional</title>
     <style>
-        :root { --primary: #00ff88; --bg: #0d1117; --card: #16213e; --text: #c9d1d9; --accent: #58a6ff; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-        .container { max-width: 800px; margin: auto; }
-        .header { text-align: center; padding: 10px; border-bottom: 2px solid var(--primary); margin-bottom: 15px; }
+        :root { --primary: #00ff88; --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #58a6ff; }
         
-        textarea { width: 100%; height: 70px; background: #010409; color: var(--primary); border: 1px solid #30363d; border-radius: 8px; padding: 10px; box-sizing: border-box; font-size: 16px; }
-        
-        .btn-group { display: flex; gap: 10px; margin: 10px 0; }
-        button { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .btn-save { background: var(--primary); color: #000; }
-        .btn-clear { background: #ff4d4d; color: #fff; }
+        body { 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
-        .stat-box { background: var(--card); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #30363d; }
-        .stat-box small { color: #8b949e; display: block; font-size: 0.6rem; text-transform: uppercase; }
-        .stat-box span { font-size: 1rem; font-weight: bold; color: var(--primary); }
+        .container { width: 100%; max-width: 1100px; }
 
-        .prediction-panel { background: rgba(22, 33, 62, 0.8); padding: 15px; border-radius: 12px; border: 2px solid var(--accent); margin-bottom: 20px; }
-        .prediction-panel h2 { color: var(--accent); margin-top: 0; font-size: 1.1rem; text-align: center; text-transform: uppercase; }
-        
-        .bet-item { background: #0d1117; padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid var(--accent); }
-        .bet-label { font-size: 0.75rem; color: var(--accent); font-weight: bold; }
-        .bet-value { font-size: 1.1rem; font-weight: bold; display: block; margin-top: 3px; color: #fff; }
+        /* Cabeçalho */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 20px; 
+            background: var(--card); 
+            border-radius: 12px; 
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 20px;
+        }
 
-        /* Estilo da Tabela de Histórico */
-        .history-section { background: var(--card); border-radius: 12px; padding: 10px; border: 1px solid #30363d; }
-        .history-section h3 { font-size: 1rem; margin-top: 0; color: #8b949e; text-align: center; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th { border-bottom: 2px solid #30363d; padding: 8px; text-align: left; color: var(--primary); }
-        td { padding: 8px; border-bottom: 1px solid #30363d; }
-        .tag-grupo { background: #238636; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        /* Área de Input */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } }
+
+        .panel { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
+
+        textarea { 
+            width: 100%; height: 120px; background: #010409; color: var(--primary); 
+            border: 1px solid #30363d; border-radius: 8px; padding: 12px; 
+            box-sizing: border-box; font-family: monospace; font-size: 16px;
+        }
+
+        .btn-save { background: var(--primary); color: #000; width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; margin-top: 10px; font-size: 1rem; }
+        .btn-clear { background: #ff4d4d22; color: #ff4d4d; border: 1px solid #ff4d4d; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+
+        /* Stats e Sugestões */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: #0d1117; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #30363d; }
+        .stat-card small { color: #8b949e; font-size: 0.7rem; display: block; }
+        .stat-card b { font-size: 1.2rem; color: var(--primary); }
+
+        .prediction-box { background: #16213e; border: 2px solid var(--accent); padding: 20px; border-radius: 12px; height: 100%; }
+        .bet-row { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #ffffff11; }
+        .bet-row:last-child { border: none; }
+        .label { color: var(--accent); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; }
+        .value { display: block; font-size: 1.3rem; font-weight: bold; color: #fff; margin-top: 5px; }
+
+        /* Tabela */
+        .history-table { width: 100%; margin-top: 20px; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; }
+        .history-table th { background: #21262d; padding: 15px; text-align: left; color: var(--primary); }
+        .history-table td { padding: 12px 15px; border-bottom: 1px solid #30363d; }
+        .tag { background: #238636; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1 style="margin:0; font-size: 1.5rem;">S.A.I v2.1</h1>
-    <div id="dataDisplay" style="font-size: 0.8rem; color: var(--primary); margin-top: 5px;"></div>
+<div class="container">
+    <div class="header">
+        <h2 style="margin:0">S.A.I v2.1 <span style="color:var(--primary)">•</span> Analisador</h2>
+        <div id="clock" style="font-family: monospace; font-weight: bold;"></div>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-card"><small>MILHARES</small><b id="mCount">0</b></div>
+        <div class="stat-box stat-card"><small>CENTENAS</small><b id="cCount">0</b></div>
+        <div class="stat-box stat-card"><small>GRUPOS</small><b id="gCount">0</b></div>
+        <div class="stat-box stat-card"><small>TOTAL</small><b id="tCount">0</b></div>
+    </div>
+
+    <div class="main-grid">
+        <div class="panel">
+            <h3 style="margin-top:0">📥 Entrada de Dados</h3>
+            <textarea id="rawInput" placeholder="Cole os resultados aqui..."></textarea>
+            <button class="btn-save" onclick="salvar()">GRAVAR E ANALISAR AGORA</button>
+            <button class="btn-clear" onclick="limpar()">Limpar Banco Permanente</button>
+        </div>
+
+        <div class="prediction-box">
+            <h3 style="margin-top:0; color: var(--accent)">🎯 POSSIBILIDADES</h3>
+            <div class="bet-row"><span class="label">Ciclo de Grupos:</span><span class="value" id="sugGrupos">---</span></div>
+            <div class="bet-row"><span class="label">Milhar Sugerida:</span><span class="value" id="sugMilhar">---</span></div>
+            <div class="bet-row"><span class="label">Terno de Grupo:</span><span class="value" id="sugTernoG">---</span></div>
+            <div class="bet-row"><span class="label">Terno de Dezena:</span><span class="value" id="sugTernoD">---</span></div>
+        </div>
+    </div>
+
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>Data/Hora</th>
+                <th>Milhar</th>
+                <th>Centena</th>
+                <th>Dezena</th>
+                <th>Grupo</th>
+            </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+    </table>
 </div>
 
-<div class="container">
-    <textarea id="rawInput" placeholder="Cole resultados aqui (ex: 1234, 5678...)"></textarea>
-    <div class="btn-group">
-        <button class="
+<script>
+    let db = JSON.parse(localStorage.getItem('banco_v2_1')) || [];
+
+    function updateClock() {
+        document.getElementById('clock').innerText = new Date().toLocaleString('pt-BR');
+    }
+    setInterval(updateClock, 1000);
+
+    function salvar() {
+        const texto = document.getElementById('rawInput').value;
+        const numeros = texto.match(/\d+/g);
+        if (!numeros) return;
+
+        const agora = new Date().toLocaleString('pt-BR', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+        
+        numeros.forEach(n => {
+            if (n.length >= 2) {
+                const d = n.slice(-2);
+                const g = Math.ceil(parseInt(d == "00" ? 100 : d) / 4);
+                db.unshift({
+                    m: n.padStart(4, '0').slice(-4),
+                    c: n.padStart(3, '0').slice(-3),
+                    d: d,
+                    g: g,
+                    dt: agora
+                });
+            }
+        });
+
+        localStorage.setItem('banco_v2_1', JSON.stringify(db));
+        document.getElementById('rawInput').value = "";
+        render();
+    }
+
+    function render() {
+        document.getElementById('tCount').innerText = db.length;
+        document.getElementById('mCount').innerText = db.length;
+        document.getElementById('cCount').innerText = db.length;
+        document.getElementById('gCount').innerText = [...new Set(db.map(x => x.g))].length;
+
+        // Histórico
+        const body = document.getElementById('historyBody');
+        body.innerHTML = db.slice(0, 15).map(i => `
+            <tr>
+                <td>${i.dt}</td>
+                <td>${i.m}</td>
+                <td>${i.c}</td>
+                <td>${i.d}</td>
+                <td><span class="tag">${String(i.g).padStart(2, '0')}</span></td>
+            </tr>
+        `).join('');
+
+        // Lógica de Sugestão
+        if(db.length > 0) {
+            let counts = {};
+            for(let i=1; i<=25; i++) counts[i] = 0;
+            db.forEach(x => counts[x.g]++);
+            let sorted = Object.keys(counts).sort((a,b) => counts[a] - counts[b]);
+            
+            document.getElementById('sugGrupos').innerText = sorted.slice(0, 5).join(" - ");
+            document.getElementById('sugTernoG').innerText = sorted.slice(0, 3).join(", ");
+            document.getElementById('sugMilhar').innerText = "5" + Math.floor(Math.random()*9) + String(sorted[0]*4-1).padStart(2,'0');
+            document.getElementById('sugTernoD').innerText = String(sorted[0]*4).padStart(2,'0') + " - " + String(sorted[1]*4).padStart(2,'0') + " - " + String(sorted[2]*4).padStart(2,'0');
+        }
+    }
+
+    function limpar() {
+        if(confirm("Deseja apagar o banco?")) {
+            db = [];
+            localStorage.removeItem('banco_v2_1');
+            render();
+        }
+    }
+
+    updateClock();
+    render();
+</script>
+
+</body>
+</html>
